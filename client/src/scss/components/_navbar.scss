@@ -1,0 +1,33 @@
+.header-nav {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   padding: 1.5rem 3rem;
+   border-bottom: 1px solid $color-quad;
+
+   &__list {
+      display: flex;
+      list-style-type: none;
+      gap: 4rem;
+   }
+   &__item {
+      text-transform: uppercase;
+      font-size: $default-font-size;
+      &:hover {
+         transform: translateY(-0.2rem) scale(1.1);
+      }
+   }
+   &__link {
+      text-decoration: none;
+      color: currentColor;
+      &:hover {
+         color: $color-tertiary;
+      }
+      &:active {
+         color: $color-quad;
+      }
+   }
+   .active {
+      color: $color-quad;
+   }
+}

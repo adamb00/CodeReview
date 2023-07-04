@@ -1,0 +1,20 @@
+.error {
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   position: absolute;
+   left: 50%;
+   top: 50%;
+   min-width: 90vw;
+   min-height: 40vh;
+   transform: translate(-50%, -50%);
+   border-radius: $default-border-radius;
+   box-shadow: $default-box-shadow;
+   &-message {
+      text-align: center;
+      font-size: 2rem;
+      color: $color-error;
+      margin: 3rem 0 2rem 0;
+   }
+}

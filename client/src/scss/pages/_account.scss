@@ -1,0 +1,30 @@
+.account {
+   display: flex;
+   font-size: $default-font-size;
+   min-width: 100vw;
+   min-height: 100vh;
+
+   &-view {
+      min-width: 25%;
+      background-image: linear-gradient(135deg, $color-quad, $color-tertiary);
+      display: flex;
+      justify-content: center;
+      &__image {
+         height: 15rem;
+         width: 15rem;
+         margin-top: 5rem;
+         border-radius: 50%;
+         background-color: red;
+      }
+      &__photo {
+         margin-top: 5rem;
+         border-radius: 50%;
+         background-color: red;
+      }
+   }
+   &-content {
+      min-width: 75%;
+      background-image: linear-gradient(135deg, $color-grey-light-2, $color-grey-light-1);
+      height: 200vh;
+   }
+}
