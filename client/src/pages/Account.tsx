@@ -1,30 +1,39 @@
-import axios from 'axios';
-import { useEffect } from 'react';
-import config from '../../config';
+import Spinner from '../components/Spinner';
 
-export default function Account() {
-   const getUser = async () => {
-      try {
-         const res = await axios.get(config.BASE_URL + '/users/me');
-         if (res.data.status === 'success') {
-            console.log('success');
-         }
-      } catch (err) {
-         console.log(err);
-      }
-   };
+import { PropsWithChildren, useContext, useState } from 'react';
+import AccountNavigation from '../components/AccountNavigation';
+import { AppProvider } from '../contexts/AppContext';
 
-   useEffect(() => {
-      getUser();
-   }, []);
+interface AccountProps {
+   isLoading: boolean;
+}
+
+export default function Account({ isLoading, children }: PropsWithChildren<AccountProps>) {
+   const { user } = useContext(AppProvider);
+   const [photoDeleted, setPhotoDeleted] = useState(false);
+   if (!user) return <Spinner />;
+
    return (
       <main className='account'>
          <section className='account-view'>
-            <div className='account-view__image'>
-               <img className='account-view__photo' alt='User photo' />
-            </div>
+            <figure className='account-view__image'>
+               {isLoading ? (
+                  <Spinner />
+               ) : (
+                  <img
+                     className='account-view__photo'
+                     src={`/${photoDeleted ? 'default.jpg' : user.photo}`}
+                     alt={`Photo about ${user.firstName}`}
+                     onError={() => setPhotoDeleted(true)}
+                  />
+               )}
+               <figcaption className='account-view__welcome'>Welcome back, {user.firstName}!</figcaption>
+            </figure>
          </section>
-         <section className='account-content'>right</section>
+         <section className='account-content'>
+            <AccountNavigation />
+            {children}
+         </section>
       </main>
    );
 }

@@ -3,27 +3,31 @@ import { useNavigate } from 'react-router-dom';
 
 import axios from 'axios';
 
-import config from '../../config';
+import config from '../utils/config';
 import Button from '../components/Button';
+import Form from '../components/Form';
 
-export default function Login() {
+export default function SingUp() {
    const navigate = useNavigate();
-   const [lastName, setLastName] = useState('');
-   const [firstName, setFirstName] = useState('');
+
    const [email, setEmail] = useState('');
+   const [firstName, setFirstName] = useState('');
+   const [lastName, setLastName] = useState('');
    const [password, setPassword] = useState('');
    const [passwordConfirm, setPasswordConfirm] = useState('');
 
    const handleFormSubmit = async (e: FormEvent<HTMLFormElement> | MouseEvent) => {
       e.preventDefault();
+
       try {
-         const res = await axios.post(config.BASE_URL + '/users/signup', {
+         const res = await axios.post(config.BASE_URL + 'users/signup', {
             firstName,
             lastName,
             email,
             password,
             passwordConfirm,
          });
+         console.log(res);
          if (res.data.status === 'success') {
             console.log('success');
             navigate('/');
@@ -36,82 +40,21 @@ export default function Login() {
       <>
          <h1 className='heading-primary heading-primary--main'>Code Review</h1>
          <div className='signup'>
-            <form className='signup-form' onSubmit={handleFormSubmit}>
-               <div className='signup-form__container'>
-                  <div className='signup-form__container--group'>
-                     <label htmlFor='firstName' className='signup-form__label'>
-                        Your First Name
-                     </label>
-                     <input
-                        id='firstName'
-                        type='text'
-                        name='firstName'
-                        className='signup-form__input'
-                        onChange={e => setFirstName(e.target.value)}
-                        value={firstName}
-                        placeholder='Adam'
-                     />
-                  </div>
-                  <div className='signup-form__container--group'>
-                     <label htmlFor='lastName' className='signup-form__label'>
-                        Your Last Name
-                     </label>
-                     <input
-                        id='lastName'
-                        type='text'
-                        name='lastName'
-                        className='signup-form__input'
-                        onChange={e => setLastName(e.target.value)}
-                        value={lastName}
-                        placeholder='Smith'
-                     />
-                  </div>
-               </div>
-               <div className='signup-form__group'>
-                  <label htmlFor='email' className='signup-form__label'>
-                     Your Email
-                  </label>
-                  <input
-                     id='email'
-                     type='text'
-                     name='email'
-                     className='signup-form__input'
-                     onChange={e => setEmail(e.target.value)}
-                     value={email}
-                     placeholder='eg. test@test.com'
-                  />
-               </div>
-               <div className='signup-form__group'>
-                  <label htmlFor='password' className='signup-form__label'>
-                     Your Password
-                  </label>
-                  <input
-                     id='password'
-                     type='password'
-                     name='password'
-                     className='signup-form__input'
-                     onChange={e => setPassword(e.target.value)}
-                     value={password}
-                     placeholder='************'
-                  />
-               </div>
-               <div className='signup-form__group'>
-                  <label htmlFor='passwordAgain' className='signup-form__label'>
-                     Your Password Again
-                  </label>
-                  <input
-                     id='passwordAgain'
-                     type='password'
-                     name='passwordAgain'
-                     className='signup-form__input'
-                     onChange={e => setPasswordConfirm(e.target.value)}
-                     value={passwordConfirm}
-                     placeholder='************'
-                  />
-               </div>
-
+            <Form
+               className='signup'
+               name={true}
+               setFirstName={setFirstName}
+               setLastName={setLastName}
+               setEmail={setEmail}
+               setPassword={setPassword}
+               setPasswordConfirm={setPasswordConfirm}
+               email={true}
+               password={true}
+               passwordConfirm={true}
+            >
+               <Button text='Back' style='back' onClick={() => navigate('/')} />
                <Button text='Sign up' style='primary' onClick={e => handleFormSubmit(e)} />
-            </form>
+            </Form>
          </div>
       </>
    );

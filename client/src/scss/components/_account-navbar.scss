@@ -1,0 +1,23 @@
+.account-nav {
+   background-image: linear-gradient(135deg, #ecbd68, $color-tertiary);
+
+   min-width: 100%;
+   min-height: 5vh;
+   margin-bottom: 3rem;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   overflow-x: scroll;
+
+   &__list {
+      display: flex;
+      gap: 4rem;
+   }
+   &__item {
+      list-style-type: none;
+   }
+   &__link {
+      color: $color-grey-light-2;
+      text-decoration: none;
+   }
+}

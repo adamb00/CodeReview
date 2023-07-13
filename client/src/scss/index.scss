@@ -1,15 +1,21 @@
 @import './abstracts/mixins';
 @import './abstracts/variables';
+@import './abstracts/animations';
 
 @import './pages/login';
 @import './pages/signup';
 @import './pages/error';
 @import './pages/account';
+@import './pages/home';
 
 @import './components/button';
 @import './components/logo';
 @import './components/navigation';
 @import './components/navbar';
+@import './components/spinner';
+@import './components/alert';
+@import './components/account-navbar';
+@import './components/upload-posts';
 
 @import './base/base';
 @import './base/typography';

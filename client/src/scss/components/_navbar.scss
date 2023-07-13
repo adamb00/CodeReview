@@ -3,7 +3,7 @@
    justify-content: space-between;
    align-items: center;
    padding: 1.5rem 3rem;
-   border-bottom: 1px solid $color-quad;
+   border-bottom: $default-border;
 
    &__list {
       display: flex;

@@ -5,11 +5,13 @@ export default interface IUser extends Document {
    passwordConfirm: string;
    passwordChangedAt?: Date;
    passwordResetToken?: string;
-   passwordResetExpires?: Date;
+   passwordResetExpires?: number;
    createdAt: Date;
    email: string;
    active: boolean;
    photo: string;
+
    correctPassword(candidatePassword: string, userPassword: string): Promise<boolean>;
    changedPassword(JWTTimestamp: number): Promise<boolean>;
+   createPasswordResetToken(user: IUser): Promise<string>;
 }

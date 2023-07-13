@@ -62,3 +62,21 @@ export function getOne(Model: GlobalType) {
       });
    });
 }
+
+export function updateOne(Model: GlobalType) {
+   return catchAsync(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
+         new: true,
+         runValidators: true,
+      });
+
+      if (!doc) {
+         return next(new AppError('No document found with that ID', 404));
+      }
+
+      res.status(200).json({
+         status: 'success',
+         data: doc,
+      });
+   });
+}

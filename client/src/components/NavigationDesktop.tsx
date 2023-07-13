@@ -1,10 +1,7 @@
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import { PropsWithChildren } from 'react';
 
-interface NavProps {
-   handleLogout: () => void;
-}
-
-export default function NavigationDesktop({ handleLogout }: NavProps) {
+export default function NavigationDesktop({ children }: PropsWithChildren) {
    return (
       <ul className='header-nav__list'>
          <li className='header-nav__item'>
@@ -22,11 +19,7 @@ export default function NavigationDesktop({ handleLogout }: NavProps) {
                Account
             </NavLink>
          </li>
-         <li className='header-nav__item'>
-            <Link className='header-nav__link' to='/' onClick={handleLogout}>
-               Log out
-            </Link>
-         </li>
+         <li className='header-nav__item'>{children}</li>
       </ul>
    );
 }

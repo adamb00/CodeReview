@@ -1,13 +1,8 @@
-import React, { MouseEventHandler, PropsWithChildren } from 'react';
+import React, { PropsWithChildren } from 'react';
 
-type Props = {
-   style: string;
-   text: string;
-   onClick: MouseEventHandler<HTMLButtonElement>;
-   children?: React.ReactNode;
-};
+import { ButtonProps } from '../interfaces/IButtonProps';
 
-export default function Button({ children, onClick, style, text }: PropsWithChildren<Props>): React.ReactNode {
+export default function Button({ children, onClick, style, text }: PropsWithChildren<ButtonProps>): React.ReactNode {
    return (
       <button onClick={onClick} type='submit' className={`btn btn--${style}`}>
          {children || text}

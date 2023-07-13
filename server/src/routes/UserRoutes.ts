@@ -17,7 +17,16 @@ router.get('/logout', authController.logout);
 
 router.route('/').get(userController.getAllUser).post(userController.createUser);
 
-router.route('/me').get(authController.protected, userController.getMe, userController.getOneUser);
+router.post('/forgotPassword', authController.forgotPassword);
+router.patch('/resetPassword/:token', authController.resetPassword);
+
+router.use(authController.protected);
+
+router.get('/me', userController.getMe, userController.getOneUser);
+router.patch('/updateMyPassword', authController.updatePassword);
+router
+   .route('/updateMe')
+   .patch(userController.uploadUserPhoto, userController.resizeUserPhoto, userController.updateMe);
 
 router.route('/:id').get(userController.getOneUser);
 

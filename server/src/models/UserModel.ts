@@ -62,7 +62,7 @@ userSchema.pre<UserType>('save', async function (this: UserType, next: (err?: Ca
 });
 
 // set passwordChangedAt index at userSchema after password changed
-userSchema.pre('save', function (this: UserType, next: (err?: CallbackError) => void): void {
+userSchema.pre<UserType>('save', function (this: UserType, next: (err?: CallbackError) => void): void {
    if (!this.isModified('password') || !this.isNew) return next();
 
    this.passwordChangedAt = Date.now() - 1000;

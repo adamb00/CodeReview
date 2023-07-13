@@ -1,11 +1,7 @@
-import { NavLink, Link } from 'react-router-dom';
-import { useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import { PropsWithChildren, useState } from 'react';
 
-interface NavProps {
-   handleLogout: () => void;
-}
-
-export default function NavigationMobile({ handleLogout }: NavProps) {
+export default function NavigationMobile({ children }: PropsWithChildren) {
    const [isChecked, setIsChecked] = useState(false);
 
    function handleCheckBox(): void {
@@ -36,11 +32,7 @@ export default function NavigationMobile({ handleLogout }: NavProps) {
                      Account
                   </NavLink>
                </li>
-               <li className='navigation__item'>
-                  <Link className='navigation__link' to='/' onClick={handleLogout}>
-                     Log out
-                  </Link>
-               </li>
+               <li className='navigation__item'>{children}</li>
             </ul>
          </div>
       </div>

@@ -1,12 +1,21 @@
 import { NextFunction, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 
 import catchAsync from '../utils/catchAsync';
 import { UserType } from '../models/UserModel';
 import User from '../models/UserModel';
 import AppError from '../utils/appError';
 import env from '../utils/validateEnv';
+import IUser from '../interfaces/IUser';
+import Email from '../utils/email';
+
+interface Decoded {
+   id: string;
+   iat: number;
+   exp: number;
+}
 
 export default class AuthController {
    /**
@@ -39,7 +48,7 @@ export default class AuthController {
     * @returns {string} jwt signed string
     */
    private signToken = (id: string): string => {
-      return jwt.sign({ id }, env.JWT_SECRET, { expiresIn: env.JWT_EXPIRES_IN });
+      return jwt.sign({ id }, env.JWT_SECRET, { expiresIn: '1d' });
    };
 
    /**
@@ -49,27 +58,38 @@ export default class AuthController {
     * @param {Request} req
     * @param {Response} res
     */
-   public createAndSendToken = async (user: UserType, statusCode: number, req: Request, res: Response) => {
+   private createAndSendToken = async (user: UserType, statusCode: number, _req: Request, res: Response) => {
       const token = this.signToken(user._id);
 
-      const cookieOptions = {
+      res.cookie('jwt', token, {
          expires: new Date(Date.now() + env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
-         httpOnly: true,
-         secure: req.secure || req.headers['x-forwarded-proto'] === 'https' || req.hostname === 'localhost',
-      };
-
-      res.cookie('jwt', token, cookieOptions);
-
+         httpOnly: false,
+         sameSite: 'none',
+         // secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
+         secure: true,
+      });
       // Remove password from output
       user.password = undefined;
 
       res.status(statusCode).json({
          status: 'success',
          token,
-         data: {
-            user,
-         },
+         data: user,
       });
+   };
+
+   /**
+    * Creates to token to reset the password for not logged users
+    * @param user
+    * @returns
+    */
+   private createPasswordResetToken = (user: IUser) => {
+      const resetToken = crypto.randomBytes(32).toString('hex');
+
+      user.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+      user.passwordResetExpires = Date.now() + 10 * 60 * 60 * 1000;
+
+      return resetToken;
    };
 
    /**
@@ -93,7 +113,8 @@ export default class AuthController {
 
       if (!email || !password) return next(new AppError('Please provide email and password', 400));
 
-      const user: UserType | null = await User.findOne({ email }).select('+password');
+      const user: UserType | null = await User.findOne({ email }).select(['+password', '+active']);
+      console.log(user);
 
       if (!user) return next(new AppError('No user found with this email.', 404));
 
@@ -102,6 +123,9 @@ export default class AuthController {
       await this.createAndSendToken(user, 200, req, res);
    });
 
+   /**
+    * Protect routes from not logged users
+    */
    public protected = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
       // Get the token and check if it exists
       let token;
@@ -117,7 +141,7 @@ export default class AuthController {
       }
 
       // Verify token
-      const decoded = jwt.verify(token, env.JWT_SECRET) as UserType;
+      const decoded: Decoded = jwt.verify(token, env.JWT_SECRET) as Decoded;
 
       // Check if the current user still exists
       const currentUser = await User.findById(decoded.id);
@@ -126,7 +150,7 @@ export default class AuthController {
          return next(new AppError('The user belonging to this token does no longer exist.', 401));
       }
 
-      if (await this.changedPassword.call(currentUser, decoded.iat)) {
+      if (await this.changedPassword(decoded.iat)) {
          return next(new AppError('User recently changed password! Please log in again.', 401));
       }
 
@@ -136,11 +160,90 @@ export default class AuthController {
       next();
    });
 
+   /**
+    * Logout function for logged users
+    * @param _req
+    * @param res
+    */
    public logout = (_req: Request, res: Response) => {
       res.cookie('jwt', 'loggedout', {
          expires: new Date(Date.now() + 10 * 1000),
-         httpOnly: true,
+         httpOnly: false,
       });
       res.status(200).json({ status: 'success' });
    };
+
+   /**
+    * Update password function for logged users
+    */
+   public updatePassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+      const user = await User.findOne(req.user).select('+password');
+
+      if (!user) return next(new AppError('Something went very wrong!', 404));
+
+      if (!(await this.correctPassword(req.body.passwordCurrent, user.password))) {
+         return next(new AppError('Your current password is wrong.', 401));
+      }
+
+      user.password = req.body.newPassword;
+      user.passwordConfirm = req.body.passwordConfirm;
+      await user.save();
+
+      // 4) Log user in, send JWT
+      this.createAndSendToken(user, 200, req, res);
+   });
+
+   /**
+    * Forgot password function for not logged users
+    * Uses the createPasswordResetToken function
+    */
+   public forgotPassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+      // Find the user, send error if not exists with this email
+      const user: IUser | null = await User.findOne({ email: req.body.email });
+
+      if (!user) {
+         return next(new AppError('There is no user with email address.', 404));
+      }
+
+      // Create the token
+      const resetToken = this.createPasswordResetToken(user);
+      await (user as UserType).save({ validateBeforeSave: false });
+
+      // Send the reset mail to the user
+      try {
+         const resetURL = `${req.protocol}://${req.get('host')}/resetPassword/${resetToken}`;
+         await new Email(user, resetURL).sendPasswordReset();
+         res.status(200).json({
+            status: 'success',
+            message: 'Token sent to email!',
+         });
+      } catch (err) {
+         user.passwordResetToken = undefined;
+         user.passwordResetExpires = undefined;
+         await (user as UserType).save({ validateBeforeSave: false });
+         return next(new AppError('There was an error sending the mail. Try again later!', 500));
+      }
+   });
+
+   public resetPassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+      const hashed = crypto.createHash('sha256').update(req.params.token).digest('hex');
+
+      const user: IUser | null = await User.findOne({
+         passwordResetToken: hashed,
+      });
+
+      if (!user) {
+         return next(new AppError('Token is invalid or has expired', 400));
+      }
+
+      console.log(req.body);
+
+      user.password = req.body.password;
+      user.passwordConfirm = req.body.passwordConfirm;
+      user.passwordResetToken = undefined;
+      user.passwordResetExpires = undefined;
+      await (user as UserType).save();
+
+      this.createAndSendToken(user, 200, req, res);
+   });
 }

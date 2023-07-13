@@ -49,4 +49,13 @@
          background-color: $color-tertiary;
       }
    }
+   &--back {
+      background-color: transparent;
+      border: 2px solid $color-tertiary;
+      color: $color-tertiary;
+
+      &::after {
+         background-color: transparent;
+      }
+   }
 }

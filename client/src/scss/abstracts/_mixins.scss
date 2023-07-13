@@ -34,21 +34,31 @@
 
 @mixin formInput() {
    border-radius: $default-border-radius;
-   border: 1px solid $color-quad;
+   border: $default-border;
    padding: 1.5rem 1rem;
    outline: none;
    font-size: $default-font-size;
+
+   &::-webkit-file-upload-button {
+      border: $default-border;
+      border-radius: $default-border-radius;
+      padding: 0.8rem 2.4rem;
+      margin-right: 2rem;
+      color: currentColor;
+      background-color: transparent;
+
+      &:hover {
+         transform: translateY(-0.2rem);
+      }
+   }
 }
 
 @mixin form() {
    display: flex;
    flex-direction: column;
-   min-width: 100%;
-   min-height: 100%;
+   min-width: 80%;
+   max-height: 100vh;
    align-items: center;
    padding: 5rem 0;
    gap: 3rem;
-   button:last-of-type {
-      margin-top: auto;
-   }
 }

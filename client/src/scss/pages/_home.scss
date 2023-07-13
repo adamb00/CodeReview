@@ -1,0 +1,10 @@
+.home {
+   position: relative;
+   max-width: 60vw;
+   min-height: 100vh;
+   display: flex;
+   left: 50%;
+   transform: translateX(-50%);
+   justify-content: center;
+   padding: 5rem 0;
+}

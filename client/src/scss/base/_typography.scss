@@ -22,7 +22,6 @@ body {
 .heading-secondary {
    text-transform: uppercase;
    backface-visibility: hidden;
-   // margin-bottom: 3rem;
    color: currentColor;
 
    &--main {
@@ -30,5 +29,21 @@ body {
       text-align: center;
       display: block;
       font-size: 2rem;
+   }
+}
+
+.heading-tertiary {
+   text-transform: uppercase;
+   backface-visibility: hidden;
+   background-image: linear-gradient(to right, $color-tertiary, $color-quad);
+   background-clip: text;
+   -webkit-background-clip: text;
+   color: transparent;
+   margin-top: 8rem;
+   &--main {
+      letter-spacing: 1.3rem;
+      text-align: center;
+      display: inline-block;
+      font-size: 1.8rem;
    }
 }

@@ -1,29 +1,59 @@
-import { Dispatch, FormEvent, MouseEvent, SetStateAction, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { FormEvent, MouseEvent, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { CookieGetOptions } from 'universal-cookie';
 
 import axios from 'axios';
 
-import config from '../../config';
+import config from '../utils/config';
 import Button from '../components/Button';
+import Form from '../components/Form';
+import { AppProvider } from '../contexts/AppContext';
+import IAccountProps from '../interfaces/IAccountProps';
+import { LoginProvider } from '../contexts/LoginContext';
 
-interface LoginProps {
-   setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
+interface LoginProps extends IAccountProps {
    setCookie: (name: string, value: string, options?: CookieGetOptions) => void;
 }
 
-export default function Login({ setIsLoggedIn, setCookie }: LoginProps) {
+export default function Login({ setCookie, setShowAlert, setAlertMessage, setAlertType }: LoginProps) {
    const navigate = useNavigate();
-   const [email, setEmail] = useState('');
-   const [password, setPassword] = useState('');
+   const { user } = useContext(AppProvider);
+   const { setIsLoggedIn } = useContext(LoginProvider);
+
+   const handleForgotPassword = async () => {
+      try {
+         const res = await axios.post(config.BASE_URL + 'users/forgotPassword', { email: user.email });
+         if (res.data.status === 'success') {
+            console.log(res.data);
+            setShowAlert(true);
+            setAlertType(res.data.status);
+            setAlertMessage(res.data.message);
+         }
+      } catch (err) {
+         setShowAlert(true);
+         setAlertType('error');
+         setAlertMessage('Something went wrong! 🤯');
+      }
+   };
 
    const handleFormSubmit = async (e: FormEvent<HTMLFormElement> | MouseEvent) => {
-      if (e) e.preventDefault();
+      e.preventDefault();
+
       try {
-         const res = await axios.post(config.BASE_URL + '/users/login', { email, password });
+         const res = await axios.post(
+            config.BASE_URL + 'users/login',
+            { email: user.email, password: user.password },
+            {
+               withCredentials: true,
+               headers: {
+                  'Content-Type': 'application/json',
+               },
+            }
+         );
 
          if (res.data.status === 'success') {
-            // setCookie('jwt', res.data.token);
+            console.log(res.data);
+            setCookie('jwt', res.data.token);
             setIsLoggedIn(true);
             navigate('/');
          }
@@ -31,50 +61,20 @@ export default function Login({ setIsLoggedIn, setCookie }: LoginProps) {
          console.log(error);
       }
    };
+
    return (
       <>
          <h1 className='heading-primary heading-primary--main'>Code Review</h1>
          <div className='login'>
-            <form className='login-form' onSubmit={handleFormSubmit}>
-               <div className='login-form__group'>
-                  <label htmlFor='email' className='login-form__label'>
-                     Your Email
-                  </label>
-                  <input
-                     type='text'
-                     name='email'
-                     id='email'
-                     className='login-form__input'
-                     onChange={e => setEmail(e.target.value)}
-                     value={email}
-                     placeholder='eg. test@test.com'
-                  />
-               </div>
-               <div className='login-form__group'>
-                  <label htmlFor='password' className='login-form__label'>
-                     Your Password
-                  </label>
-                  <input
-                     type='password'
-                     name='password'
-                     id='password'
-                     className='login-form__input'
-                     onChange={e => setPassword(e.target.value)}
-                     value={password}
-                     placeholder='************'
-                  />
-               </div>
-               <div className='login-form__links'>
-                  <Link className='login-form__forgot' to='/'>
-                     Forgot your password?
-                  </Link>
-                  <Link className='login-form__forgot' to='/signup'>
-                     Or don't have an account yet?
-                  </Link>
-               </div>
-
+            <Form
+               className='login'
+               links={true}
+               email={true}
+               password={true}
+               handleForgotPassword={handleForgotPassword}
+            >
                <Button text='Login' style='primary' onClick={e => handleFormSubmit(e)} />
-            </form>
+            </Form>
          </div>
       </>
    );

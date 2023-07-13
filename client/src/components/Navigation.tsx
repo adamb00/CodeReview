@@ -1,23 +1,15 @@
 import { useLocation } from 'react-router-dom';
-import { CookieGetOptions } from 'universal-cookie';
-import { Dispatch, SetStateAction, useState, useEffect } from 'react';
+import { useState, useEffect, PropsWithChildren } from 'react';
 
 import Logo from './Logo';
-import axios from 'axios';
-import config from '../../config';
 import NaviagtionMobile from './NavigationMobile';
 import NavigationDesktop from './NavigationDesktop';
+import { excludedRoutes } from '../utils/helper';
 
-interface NavProps {
-   setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
-   removeCookie: (name: string, options?: CookieGetOptions) => void;
-}
-
-const Navigation = ({ setIsLoggedIn, removeCookie }: NavProps) => {
+export default function Navigation({ children }: PropsWithChildren) {
    const [isMobile, setIsMobile] = useState(false);
-
    const { pathname } = useLocation();
-   const excludedRoutes = ['/signup'];
+
    const shouldDisplayNavigation = !excludedRoutes.includes(pathname);
 
    useEffect(() => {
@@ -34,17 +26,6 @@ const Navigation = ({ setIsLoggedIn, removeCookie }: NavProps) => {
       };
    }, []);
 
-   async function handleLogout() {
-      try {
-         const res = await axios.get(config.BASE_URL + '/users/logout');
-         setIsLoggedIn(false);
-         removeCookie('jwt');
-         console.log(res);
-      } catch (err) {
-         console.log(err);
-      }
-   }
-
    if (!shouldDisplayNavigation) {
       return null;
    }
@@ -55,13 +36,11 @@ const Navigation = ({ setIsLoggedIn, removeCookie }: NavProps) => {
             <Logo />
             <h2 className='heading-secondary heading-secondary--main'>CodeReview</h2>
             {!isMobile ? (
-               <NavigationDesktop handleLogout={handleLogout} />
+               <NavigationDesktop>{children}</NavigationDesktop>
             ) : (
-               <NaviagtionMobile handleLogout={handleLogout} />
+               <NaviagtionMobile> {children}</NaviagtionMobile>
             )}
          </nav>
       </>
    );
-};
-
-export default Navigation;
+}
