@@ -1,10 +1,16 @@
 import UploadPosts from '../components/UploadPosts';
+import Posts from '../components/Posts';
 
-export default function Home() {
+interface HomeProps {
+   cookies: { [key: string]: string };
+}
+
+export default function Home({ cookies }: HomeProps) {
    return (
       <>
          <div className='home'>
-            <UploadPosts />
+            <UploadPosts cookies={cookies} />
+            <Posts cookies={cookies} />
          </div>
       </>
    );

@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import AuthController from '../controllers/AuthController';
 import UserController from '../controllers/UserController';
+import { resizePhoto } from '../middlewares/UploadPhoto';
 
 const router: Router = Router();
 const authController = new AuthController();
@@ -24,9 +25,10 @@ router.use(authController.protected);
 
 router.get('/me', userController.getMe, userController.getOneUser);
 router.patch('/updateMyPassword', authController.updatePassword);
-router
-   .route('/updateMe')
-   .patch(userController.uploadUserPhoto, userController.resizeUserPhoto, userController.updateMe);
+router.route('/updateMe').patch(userController.uploadUserPhoto, resizePhoto, userController.updateMe);
+
+router.patch('/addToFavorites', userController.addToFavorites);
+router.get('/getFavorites', userController.getUserFavorites);
 
 router.route('/:id').get(userController.getOneUser);
 

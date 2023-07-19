@@ -16,8 +16,12 @@ const postSchema: Schema = new Schema<IPost>({
       type: Date,
       default: Date.now(),
    },
-   // TODO: Validate lenght of the array
-   content: [{ type: String, value: String }],
+
+   photo: {
+      type: String,
+      required: [true, 'Every post must belong to photo.'],
+   },
+   content: { type: String, required: [true, 'Every post must contains content.'] },
 });
 
 // Populate the user to a post

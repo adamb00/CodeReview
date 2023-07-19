@@ -1,9 +1,10 @@
 import IUser from './IUser';
 
-export default interface Post extends Document {
+export default interface IPost {
    title: string;
    photo: string;
    content: string;
    user: IUser;
    createdAt: Date;
+   _id: string;
 }

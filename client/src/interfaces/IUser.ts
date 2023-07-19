@@ -1,4 +1,4 @@
-export default interface User {
+export default interface IUser {
    firstName?: string;
    lastName?: string;
    password?: string;
@@ -7,4 +7,6 @@ export default interface User {
    email?: string;
    active?: boolean;
    photo?: File | string;
+   id: string;
+   favoritePosts: string[];
 }

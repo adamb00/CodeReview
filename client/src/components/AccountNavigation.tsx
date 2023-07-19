@@ -19,6 +19,11 @@ export default function AccountNavigation() {
                   Posts
                </NavLink>
             </li>
+            <li className='account-nav__item'>
+               <NavLink className='account-nav__link' to='starred'>
+                  Starred
+               </NavLink>
+            </li>
          </ul>
       </nav>
    );

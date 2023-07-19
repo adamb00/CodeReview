@@ -3,6 +3,9 @@ import { useContext, useEffect } from 'react';
 
 import './scss/index.scss';
 
+import { LoginProvider } from './contexts/LoginContext';
+import useGetUser from './hooks/useGetUser';
+
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Home from './pages/Home';
@@ -10,14 +13,13 @@ import Error from './pages/Error';
 import Account from './pages/Account';
 
 import Alert from './components/Alert';
-import Posts from './components/Posts';
 import Logout from './components/Logout';
+import UserPosts from './components/UserPosts';
+import Starred from './components/Starred';
+import Comments from './components/Comments';
 import Navigation from './components/Navigation';
 import PersonalInformation from './components/PersonalInformation';
 import SecurityInformation from './components/SecurityInformation';
-
-import { LoginProvider } from './contexts/LoginContext';
-import useGetUser from './hooks/useGetUser';
 
 export default function App() {
    const { isLoggedIn } = useContext(LoginProvider);
@@ -71,8 +73,9 @@ export default function App() {
                <Logout removeCookie={() => removeCookie('jwt')} />
             </Navigation>
             <Routes>
-               <Route path='/' element={<Home />} />
+               <Route path='/' element={<Home cookies={cookies} />} />
                <Route path='/signup' element={<Error>You are already logged in.</Error>} />
+               <Route path='comments' element={<Comments />} />
 
                <Route
                   path='account/*'
@@ -101,7 +104,8 @@ export default function App() {
                                  />
                               }
                            />
-                           <Route path='posts' element={<Posts />} />
+                           <Route path='posts' element={<UserPosts />} />
+                           <Route path='starred' element={<Starred />} />
                         </Routes>
                      </Account>
                   }

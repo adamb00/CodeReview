@@ -52,7 +52,6 @@ export default function Login({ setCookie, setShowAlert, setAlertMessage, setAle
          );
 
          if (res.data.status === 'success') {
-            console.log(res.data);
             setCookie('jwt', res.data.token);
             setIsLoggedIn(true);
             navigate('/');

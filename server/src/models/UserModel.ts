@@ -19,6 +19,13 @@ const userSchema: Schema = new Schema<IUser>({
       required: [true, 'Please provide us your email.'],
       validate: [validator.isEmail, 'Please provid a valid email.'],
    },
+   favoritePosts: [
+      {
+         type: Schema.Types.ObjectId,
+         ref: 'Post',
+      },
+   ],
+
    password: {
       type: String,
       required: [true, 'Please provide a password'],
@@ -68,6 +75,18 @@ userSchema.pre<UserType>('save', function (this: UserType, next: (err?: Callback
    this.passwordChangedAt = Date.now() - 1000;
    next();
 });
+
+userSchema.methods.addFavorite = function (postId: string) {
+   const index = this.favoritePosts.indexOf(postId);
+
+   if (index === -1) {
+      // Post is not favorited, add it to the array
+      this.favoritePosts.push(postId);
+   } else {
+      // Post is already favorited, remove it from the array
+      this.favoritePosts.splice(index, 1);
+   }
+};
 
 const User = model<UserType>('User', userSchema);
 

@@ -1,40 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
-import multer, { FileFilterCallback } from 'multer';
-import sharp from 'sharp';
-import path from 'path';
 
 import * as handler from '../utils/handleControllers';
 import catchAsync from '../utils/catchAsync';
 import AppError from '../utils/appError';
-import User from '../models/UserModel';
+import User, { UserType } from '../models/UserModel';
+import { upload } from '../middlewares/UploadPhoto';
+import Post from '../models/PostModel';
 
 export default class UserController {
-   private multerStorage = multer.memoryStorage();
-
-   private multerFilter = (_req: Request, file: Express.Multer.File, cb: FileFilterCallback) => {
-      if (file.mimetype.startsWith('image')) {
-         cb(null, true);
-      } else {
-         cb(null, false);
-      }
-   };
-
-   private upload = multer({ storage: this.multerStorage, fileFilter: this.multerFilter });
-
-   public resizeUserPhoto = catchAsync(async (req: Request, _res: Response, next: NextFunction) => {
-      if (!req.file) return next();
-
-      req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
-
-      const outputPath = path.join(__dirname, '../../../client/public', req.file.filename);
-
-      await sharp(req.file.buffer).resize(500, 500).toFormat('jpeg').jpeg({ quality: 90 }).toFile(outputPath);
-
-      next();
-   });
-
-   public uploadUserPhoto = this.upload.single('photo');
-
    /**
     * Filter the body to check which field should be included in the query
     * @param obj
@@ -48,6 +21,8 @@ export default class UserController {
       });
       return newObj;
    };
+
+   public uploadUserPhoto = upload.single('photo');
 
    /**
     * Create a user with the global handler function
@@ -98,6 +73,44 @@ export default class UserController {
       res.status(200).json({
          status: 'success',
          data: updatedUser,
+      });
+   });
+
+   /**
+    * Add post to favorites
+    */
+   public addToFavorites = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+      const post = await Post.findById(req.body.post);
+      const user = await User.findById(req.user.id);
+
+      if (!post) return next(new AppError('No post found with that id', 404));
+      if (!user) return next(new AppError('No user found with that id', 404));
+
+      await user.addFavorite(post.id);
+      await user.save({ validateBeforeSave: false });
+
+      res.status(200).json({
+         status: 'success',
+         user,
+      });
+   });
+
+   public getUserFavorites = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+      const user = await User.findById(req.user.id);
+
+      if (!user) return next(new AppError('No user found with that id', 404));
+
+      let posts;
+
+      (user as UserType).favoritePosts.forEach(async (element: string) => {
+         posts = await Post.findById(element);
+      });
+
+      console.log(posts);
+
+      res.status(200).json({
+         status: 'success',
+         data: posts,
       });
    });
 }

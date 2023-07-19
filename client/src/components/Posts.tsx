@@ -1,7 +1,22 @@
-export default function Posts() {
+import usePosts from '../hooks/usePosts';
+
+import PostItem from './PostItem';
+import Spinner from './Spinner';
+
+interface PostsProps {
+   cookies: { [key: string]: string };
+}
+
+export default function Posts({ cookies }: PostsProps) {
+   const { posts } = usePosts();
+
+   if (!posts) return <Spinner />;
+
    return (
       <>
-         <h2 className='heading-tertiary heading-tertiary--main'>Your posts</h2>
+         {posts.map(post => (
+            <PostItem post={post} key={post._id} cookies={cookies} />
+         ))}
       </>
    );
 }

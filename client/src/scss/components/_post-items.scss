@@ -1,0 +1,59 @@
+.post-item {
+   display: flex;
+   flex-direction: column;
+   margin-top: 5rem;
+   border-radius: $default-border-radius;
+   box-shadow: $default-box-shadow;
+   padding: 5rem;
+   gap: 3rem;
+   font-size: $default-font-size;
+
+   &__star {
+      position: absolute;
+      right: 2rem;
+      stroke: $color-quad;
+      font-size: $default-font-size + 1;
+
+      &:hover {
+         fill: $color-quad;
+      }
+      &.active {
+         fill: $color-quad;
+      }
+   }
+
+   &__photo {
+      max-width: 100%;
+
+      display: flex;
+      align-self: center;
+   }
+
+   &__comment {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+   }
+
+   &__comments {
+      display: flex;
+      align-self: end;
+
+      &,
+      &:link,
+      &:visited {
+         color: currentColor;
+      }
+   }
+
+   &__group {
+      @include formGroup();
+   }
+   &__label {
+      @include formLabel();
+   }
+   &__input {
+      @include formInput();
+   }
+}

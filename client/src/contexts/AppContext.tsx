@@ -1,12 +1,12 @@
 import { createContext, useState } from 'react';
-import User from '../interfaces/IUser';
+import IUser from '../interfaces/IUser';
 
 interface AppProviderProps {
    children: React.ReactNode;
 }
 interface AppContextProps {
-   user: User;
-   setUser: React.Dispatch<React.SetStateAction<User>>;
+   user: IUser;
+   setUser: React.Dispatch<React.SetStateAction<IUser>>;
 }
 
 const defaultValue: AppContextProps = {
@@ -18,6 +18,8 @@ const defaultValue: AppContextProps = {
       passwordConfirm: '',
       photo: 'default.jpg',
       active: false,
+      id: '',
+      favoritePosts: [],
    },
    setUser: () => {
       //Placeholder function
@@ -27,7 +29,7 @@ const defaultValue: AppContextProps = {
 export const AppProvider = createContext<AppContextProps>(defaultValue);
 
 export const AppContext = ({ children }: AppProviderProps) => {
-   const [user, setUser] = useState<User>(defaultValue.user);
+   const [user, setUser] = useState<IUser>(defaultValue.user);
 
    return <AppProvider.Provider value={{ user, setUser }}>{children}</AppProvider.Provider>;
 };

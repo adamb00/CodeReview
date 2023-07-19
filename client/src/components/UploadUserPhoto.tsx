@@ -9,6 +9,7 @@ import IAccountProps from '../interfaces/IAccountProps';
 
 export default function UploadUserPhoto({ setAlertMessage, setShowAlert, setAlertType, cookies }: IAccountProps) {
    const { user } = useContext(AppProvider);
+
    const handleFormSubmit: MouseEventHandler<HTMLButtonElement> = async e => {
       e.preventDefault();
       setShowAlert(true);
@@ -20,6 +21,7 @@ export default function UploadUserPhoto({ setAlertMessage, setShowAlert, setAler
             withCredentials: true,
             headers: headers(cookies),
          });
+         console.log(res);
          if (res.data.status === 'success') {
             setAlertMessage('Successfully updated! 🥳');
             setAlertType('success');

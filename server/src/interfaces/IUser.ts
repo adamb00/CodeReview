@@ -10,8 +10,10 @@ export default interface IUser extends Document {
    email: string;
    active: boolean;
    photo: string;
+   favoritePosts: string[];
 
    correctPassword(candidatePassword: string, userPassword: string): Promise<boolean>;
    changedPassword(JWTTimestamp: number): Promise<boolean>;
    createPasswordResetToken(user: IUser): Promise<string>;
+   addFavorite(postId: string): void;
 }

@@ -4,6 +4,7 @@ import { AppProvider } from '../contexts/AppContext';
 import { LoginProvider } from '../contexts/LoginContext';
 import config from '../utils/config';
 import { useCookies } from 'react-cookie';
+import { headers } from '../utils/helper';
 
 export default function useUserData() {
    const [cookies, setCookie, removeCookie] = useCookies(['jwt']);
@@ -19,9 +20,7 @@ export default function useUserData() {
          try {
             setIsLoading(true);
             const res = await axios.get(config.BASE_URL + 'users/me', {
-               headers: {
-                  Authorization: `Bearer ${cookies.jwt}`,
-               },
+               headers: headers(cookies),
             });
             if (res.data.status === 'success') {
                setUser(res.data.data);
@@ -39,7 +38,7 @@ export default function useUserData() {
       } else {
          setIsLoggedIn(false);
       }
-   }, [cookies.jwt, setIsLoggedIn, setUser]);
+   }, [cookies, cookies.jwt, setIsLoggedIn, setUser]);
 
    return {
       cookies,

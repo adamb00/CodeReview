@@ -2,7 +2,6 @@ import { ChangeEvent, PropsWithChildren, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { AppProvider } from '../contexts/AppContext';
 import FormProps from '../interfaces/IFormProps';
-import { LoginProvider } from '../contexts/LoginContext';
 
 export default function Form({
    className,
@@ -23,7 +22,6 @@ export default function Form({
    children,
 }: PropsWithChildren<FormProps>) {
    const { user, setUser } = useContext(AppProvider);
-   const { isLoggedIn } = useContext(LoginProvider);
 
    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
       const { name, value, files } = e.target;
@@ -69,7 +67,6 @@ export default function Form({
                      name='firstName'
                      className={`${className}-form__input`}
                      onChange={handleInputChange}
-                     value={isLoggedIn ? user.firstName : ''}
                      placeholder='Adam'
                   />
                </div>
@@ -83,7 +80,6 @@ export default function Form({
                      name='lastName'
                      className={`${className}-form__input`}
                      onChange={handleInputChange}
-                     value={isLoggedIn ? user.lastName : ''}
                      placeholder='Smith'
                   />
                </div>
@@ -100,7 +96,6 @@ export default function Form({
                   name='email'
                   className={`${className}-form__input`}
                   onChange={handleInputChange}
-                  value={isLoggedIn ? user.email : ''}
                   placeholder='eg. test@test.com'
                />
             </div>
