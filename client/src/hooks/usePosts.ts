@@ -1,12 +1,12 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import config from '../utils/config';
 import { headers } from '../utils/helper';
 import { useCookies } from 'react-cookie';
-import IPost from '../interfaces/IPost';
+import { PostProvider } from '../contexts/PostContext';
 
 export default function usePosts() {
-   const [posts, setPosts] = useState<IPost[]>();
+   const { posts, setPosts } = useContext(PostProvider);
    const [isLoading, setIsLoading] = useState(false);
    const [cookies, setCookie, removeCookie] = useCookies(['jwt']);
 
@@ -28,6 +28,7 @@ export default function usePosts() {
          }
       };
       getPosts();
-   }, [cookies]);
+   }, [cookies, setPosts]);
+
    return { posts, setPosts, isLoading, setIsLoading, cookies, setCookie, removeCookie };
 }

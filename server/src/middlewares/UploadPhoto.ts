@@ -24,7 +24,7 @@ export const resizePhoto = catchAsync(async (req: Request, _res: Response, next:
 
    await sharp(req.file.buffer)
       .rotate()
-      .resize(500, 500)
+      .resize(1000, 1000)
       .withMetadata()
       .toFormat('jpeg')
       .jpeg({ quality: 90 })

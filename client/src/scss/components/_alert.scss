@@ -10,6 +10,7 @@
    animation: moveInTop 800ms ease-out;
    color: $color-grey-light-1;
    left: 35%;
+   z-index: 1000;
 
    &-success {
       background-color: $color-success;

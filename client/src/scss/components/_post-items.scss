@@ -7,24 +7,18 @@
    padding: 5rem;
    gap: 3rem;
    font-size: $default-font-size;
+   @include respond(phone) {
+      padding: 3rem 1rem;
+      gap: 5rem;
+   }
 
    &__star {
-      position: absolute;
-      right: 2rem;
-      stroke: $color-quad;
-      font-size: $default-font-size + 1;
-
-      &:hover {
-         fill: $color-quad;
-      }
-      &.active {
-         fill: $color-quad;
-      }
+      @include star();
    }
 
    &__photo {
-      max-width: 100%;
-
+      width: 100%;
+      height: 100%;
       display: flex;
       align-self: center;
    }
@@ -34,17 +28,14 @@
       align-items: center;
       justify-content: space-between;
       gap: 1rem;
+
+      @include respond(phone) {
+         max-width: 70%;
+      }
    }
 
    &__comments {
-      display: flex;
-      align-self: end;
-
-      &,
-      &:link,
-      &:visited {
-         color: currentColor;
-      }
+      @include commentLink();
    }
 
    &__group {

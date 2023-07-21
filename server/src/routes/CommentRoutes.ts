@@ -7,7 +7,10 @@ const router: Router = Router({ mergeParams: true });
 const commentController = new CommentController();
 const authController = new AuthController();
 
-router.route('/').get(commentController.getAllComment).post(authController.protected, commentController.createComment);
+router
+   .route('/')
+   .get(commentController.getAllCommentOnPost)
+   .post(authController.protected, commentController.createComment);
 
 router.route('/:id').get(commentController.getOneComment);
 

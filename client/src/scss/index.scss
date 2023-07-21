@@ -7,6 +7,7 @@
 @import './pages/error';
 @import './pages/account';
 @import './pages/home';
+@import './pages/comments';
 
 @import './components/button';
 @import './components/logo';
@@ -17,6 +18,8 @@
 @import './components/account-navbar';
 @import './components/upload-posts';
 @import './components/post-items';
+@import './components/user-post';
+@import './components/starred-post';
 
 @import './base/base';
 @import './base/typography';

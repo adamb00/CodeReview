@@ -1,9 +1,9 @@
 import IUser from './IUser';
-// import IPost from './IPost';
 
-export default interface IComment extends Document {
+export default interface IComment {
    content: string;
    createdAt: Date;
    user: IUser;
    post: string;
+   _id: string;
 }

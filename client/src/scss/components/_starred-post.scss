@@ -1,0 +1,30 @@
+.starred-post {
+   margin-top: 10rem;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   gap: 3rem;
+   max-width: 80%;
+   border-radius: $default-border-radius;
+   box-shadow: $default-box-shadow;
+   padding: 2rem;
+   position: relative;
+
+   &__photo {
+      min-width: 80%;
+      max-width: 80%;
+      @include respond(phone) {
+         max-width: 30%;
+      }
+   }
+   &__star {
+      @include star();
+   }
+   &__comments {
+      @include commentLink();
+   }
+
+   &:last-child {
+      margin-bottom: 10rem;
+   }
+}

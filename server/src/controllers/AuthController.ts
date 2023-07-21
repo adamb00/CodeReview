@@ -160,6 +160,26 @@ export default class AuthController {
       next();
    });
 
+   public isLoggedIn = async (req: Request, res: Response, next: NextFunction) => {
+      if (req.cookies.jwt) {
+         try {
+            const decoded: Decoded = jwt.verify(req.cookies.jwt, env.JWT_SECRET) as Decoded;
+            const currentUser = await User.findById(decoded.id);
+
+            if (!currentUser) return next();
+
+            if (await this.changedPassword(decoded.iat)) return next();
+
+            res.locals.user = currentUser;
+            return next();
+         } catch (err) {
+            console.log(err);
+            return next();
+         }
+      }
+      next();
+   };
+
    /**
     * Logout function for logged users
     * @param _req

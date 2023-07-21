@@ -1,0 +1,24 @@
+.comment {
+   &__group {
+      @include formGroup();
+      border-radius: $default-border-radius;
+      box-shadow: $default-box-shadow;
+      border: $default-border;
+      padding: 1rem 2rem;
+
+      ~ .current {
+         display: flex;
+         align-items: end;
+         border: 1px solid $color-success;
+      }
+   }
+
+   &__label {
+      @include formLabel();
+      display: flex;
+      justify-content: space-between;
+   }
+   &__content {
+      font-size: $default-font-size;
+   }
+}

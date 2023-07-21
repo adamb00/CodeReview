@@ -1,5 +1,5 @@
 import UploadPosts from '../components/UploadPosts';
-import Posts from '../components/Posts';
+import Post from '../components/Post';
 
 interface HomeProps {
    cookies: { [key: string]: string };
@@ -10,7 +10,7 @@ export default function Home({ cookies }: HomeProps) {
       <>
          <div className='home'>
             <UploadPosts cookies={cookies} />
-            <Posts cookies={cookies} />
+            <Post />
          </div>
       </>
    );

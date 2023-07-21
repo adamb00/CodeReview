@@ -16,6 +16,8 @@ router
    .get(postController.getAllPost)
    .post(authController.protected, postController.uploadPostPhoto, resizePhoto, postController.createPost);
 
+router.get('/myPosts', authController.isLoggedIn, postController.getUserPost);
+
 router.route('/:id').get(postController.getOnePost);
 
 export default router;

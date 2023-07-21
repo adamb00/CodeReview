@@ -15,9 +15,6 @@ type GlobalType = typeof User | typeof Post | typeof Comment;
  */
 export function createOne(Model: GlobalType) {
    return catchAsync(async (req: Request, res: Response): Promise<void> => {
-      console.log(req.user);
-      console.log(req.body);
-      console.log(req.params);
       if (!req.body.user) req.body.user = req.user.id;
       if (!req.body.post) req.body.post = req.params.id;
       if (!req.body.photo) req.body.photo = req.file?.filename;

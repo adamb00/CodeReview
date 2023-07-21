@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import * as handler from '../utils/handleControllers';
 import catchAsync from '../utils/catchAsync';
 import AppError from '../utils/appError';
-import User, { UserType } from '../models/UserModel';
+import User from '../models/UserModel';
 import { upload } from '../middlewares/UploadPhoto';
 import Post from '../models/PostModel';
 
@@ -89,6 +89,8 @@ export default class UserController {
       await user.addFavorite(post.id);
       await user.save({ validateBeforeSave: false });
 
+      console.log(user);
+
       res.status(200).json({
          status: 'success',
          user,
@@ -100,17 +102,19 @@ export default class UserController {
 
       if (!user) return next(new AppError('No user found with that id', 404));
 
-      let posts;
+      const favoritePostsIds = user.favoritePosts;
 
-      (user as UserType).favoritePosts.forEach(async (element: string) => {
-         posts = await Post.findById(element);
+      const favoritePostsPromises = favoritePostsIds.map(async (postId: string) => {
+         const post = await Post.findById(postId);
+         if (!post) return next(new AppError('No post found with that id', 404));
+         return post;
       });
 
-      console.log(posts);
+      const favoritePosts = await Promise.all(favoritePostsPromises);
 
       res.status(200).json({
          status: 'success',
-         data: posts,
+         data: favoritePosts,
       });
    });
 }

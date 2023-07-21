@@ -1,9 +1,12 @@
 .signup {
    position: absolute;
    left: 50%;
-   top: 50%;
+   top: 60%;
    transform: translate(-50%, -50%);
    width: 50vw;
+   @include respond(phone) {
+      width: 90vw;
+   }
    min-height: 60vh;
    border-radius: $default-border-radius;
    box-shadow: $default-box-shadow;
@@ -13,6 +16,10 @@
       &__container {
          display: flex;
          width: 80%;
+         @include respond(phone) {
+            width: 95%;
+            gap: 2rem;
+         }
          justify-content: space-between !important;
          &--group {
             display: flex;

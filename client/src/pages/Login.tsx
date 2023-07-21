@@ -24,7 +24,6 @@ export default function Login({ setCookie, setShowAlert, setAlertMessage, setAle
       try {
          const res = await axios.post(config.BASE_URL + 'users/forgotPassword', { email: user.email });
          if (res.data.status === 'success') {
-            console.log(res.data);
             setShowAlert(true);
             setAlertType(res.data.status);
             setAlertMessage(res.data.message);

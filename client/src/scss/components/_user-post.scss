@@ -1,0 +1,27 @@
+.user-post {
+   margin-top: 10rem;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   gap: 3rem;
+   max-width: 80%;
+   border-radius: $default-border-radius;
+   box-shadow: $default-box-shadow;
+   padding: 2rem;
+   @include respond(phone) {
+      padding: 3rem 1rem;
+   }
+
+   &__photo {
+      min-width: 80%;
+      max-width: 80%;
+      @include respond(phone) {
+         max-width: 100%;
+      }
+   }
+
+   &:last-child {
+      margin-bottom: 10rem;
+   }
+}

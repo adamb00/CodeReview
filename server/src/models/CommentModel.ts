@@ -14,11 +14,13 @@ const commentSchema: Schema = new Schema<IComment>({
       required: [true, 'Comment must belong to a user.'],
       select: false,
    },
-   post: {
-      type: Schema.Types.ObjectId,
-      ref: 'Post',
-      required: [true, 'Comment must belong to a post.'],
-   },
+   post: [
+      {
+         type: Schema.Types.ObjectId,
+         ref: 'Post',
+         required: [true, 'Comment must belong to a post.'],
+      },
+   ],
 });
 
 // Populate user and post to a comment

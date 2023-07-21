@@ -1,17 +1,16 @@
 import { ChangeEvent, Dispatch, MouseEventHandler, SetStateAction } from 'react';
 import Button from './Button';
-import IPost from '../interfaces/IPost';
 
 interface PostCommentProps {
    handleSubmit: MouseEventHandler<HTMLButtonElement>;
    setContent: Dispatch<SetStateAction<string>>;
-   post: IPost;
 }
 
 export default function PostComments({ handleSubmit, setContent }: PostCommentProps) {
    const handleClick = (e: ChangeEvent<HTMLInputElement>) => {
       setContent(e.target.value);
    };
+
    return (
       <div className='post-item__comment'>
          <div className='post-item__group'>

@@ -10,7 +10,19 @@ import NavProps from '../interfaces/INavProps';
 import { AppProvider } from '../contexts/AppContext';
 import { LoginProvider } from '../contexts/LoginContext';
 
-export default function Logout({ removeCookie }: NavProps) {
+const defaultUser = {
+   email: '',
+   firstName: '',
+   lastName: '',
+   password: '',
+   passwordConfirm: '',
+   photo: 'default.jpg',
+   active: false,
+   _id: '',
+   favoritePosts: [],
+};
+
+export default function Logout({ removeCookie, className }: NavProps) {
    const { setUser } = useContext(AppProvider);
    const { setIsLoggedIn } = useContext(LoginProvider);
    async function handleLogout() {
@@ -18,7 +30,7 @@ export default function Logout({ removeCookie }: NavProps) {
          const res = await axios.get(config.BASE_URL + 'users/logout', { headers: headers({}) });
          if (res.data.status === 'success') {
             setIsLoggedIn(false);
-            setUser(new Object());
+            setUser(defaultUser);
             removeCookie('jwt');
          }
       } catch (err) {
@@ -26,7 +38,7 @@ export default function Logout({ removeCookie }: NavProps) {
       }
    }
    return (
-      <Link className='header-nav__link' to='/' onClick={handleLogout}>
+      <Link className={className} to='/' onClick={handleLogout}>
          Log out
       </Link>
    );

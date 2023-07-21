@@ -4,6 +4,9 @@
    top: 50%;
    transform: translate(-50%, -50%);
    width: 50vw;
+   @include respond(phone) {
+      width: 90vw;
+   }
    min-height: 40vh;
    border-radius: $default-border-radius;
    box-shadow: $default-box-shadow;

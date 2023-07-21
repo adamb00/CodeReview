@@ -1,21 +1,18 @@
 import usePosts from '../hooks/usePosts';
+import IPost from '../interfaces/IPost';
 
 import PostItem from './PostItem';
 import Spinner from './Spinner';
 
-interface PostsProps {
-   cookies: { [key: string]: string };
-}
-
-export default function Posts({ cookies }: PostsProps) {
+export default function Post() {
    const { posts } = usePosts();
 
    if (!posts) return <Spinner />;
 
    return (
       <>
-         {posts.map(post => (
-            <PostItem post={post} key={post._id} cookies={cookies} />
+         {posts.map((post: IPost) => (
+            <PostItem post={post} key={post._id} linkToComments={true} />
          ))}
       </>
    );

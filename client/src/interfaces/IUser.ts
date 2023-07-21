@@ -7,6 +7,6 @@ export default interface IUser {
    email?: string;
    active?: boolean;
    photo?: File | string;
-   id: string;
+   _id: string;
    favoritePosts: string[];
 }

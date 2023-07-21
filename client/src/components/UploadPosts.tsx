@@ -52,7 +52,6 @@ export default function UploadPosts({ cookies }: UploadPostsProps) {
             withCredentials: true,
             headers: headers(cookies),
          });
-         console.log(response);
       } catch (error) {
          console.log(error);
       }
@@ -83,11 +82,14 @@ export default function UploadPosts({ cookies }: UploadPostsProps) {
             </div>
             <div className='home__upload--group'>
                <label className='home__upload--label' htmlFor='files'>
-                  Choose your photos or just enter some text
+                  Enter some text
                </label>
                <textarea id='files' className='home__upload--input' onChange={handleContentChange} />
             </div>
             <div className='home__upload--group'>
+               <label htmlFor='photos' className='home__upload--label'>
+                  Choose your photo
+               </label>
                <input
                   type='file'
                   className='home__upload--input'

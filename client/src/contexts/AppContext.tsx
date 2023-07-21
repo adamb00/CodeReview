@@ -18,7 +18,7 @@ const defaultValue: AppContextProps = {
       passwordConfirm: '',
       photo: 'default.jpg',
       active: false,
-      id: '',
+      _id: '',
       favoritePosts: [],
    },
    setUser: () => {

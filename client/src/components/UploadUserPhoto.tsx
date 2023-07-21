@@ -21,7 +21,6 @@ export default function UploadUserPhoto({ setAlertMessage, setShowAlert, setAler
             withCredentials: true,
             headers: headers(cookies),
          });
-         console.log(res);
          if (res.data.status === 'success') {
             setAlertMessage('Successfully updated! 🥳');
             setAlertType('success');
